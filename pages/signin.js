@@ -38,9 +38,16 @@ const SignIn = () => {
       if (response.status === 200) {
         dispatch(clearSignIn());
         dispatch(
-          updateSignInSuccess({ success: "Sign in successful, redirecting..." })
+          updateSignInSuccess({
+            success: "Sign in successful, redirecting...",
+          })
         );
         router.push("/");
+
+        //TODO: Maybe something else
+        setTimeout(() => {
+          dispatch(clearSignInAlerts());
+        }, 1000);
       } else {
         dispatch(updateSignInError({ error: response.body.error }));
         setIsSigningIn(false);

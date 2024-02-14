@@ -21,7 +21,7 @@ export const updateSignInError = ({ error = "" }) => ({
   error,
 });
 
-// SIGN-IN/ERROR
+// SIGN-IN/SUCCESS
 export const updateSignInSuccess = ({ success = "" }) => ({
   type: "SIGN-IN/SUCCESS",
   success,
