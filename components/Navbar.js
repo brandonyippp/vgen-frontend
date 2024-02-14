@@ -63,6 +63,7 @@ const Navbar = ({ className }) => {
           variant="primary"
           onClick={handleSignout}
           disabled={!signedIn}
+          hideAll={!signedIn}
         />
       </HeaderContents>
     </Header>

@@ -67,6 +67,12 @@ const ButtonElement = styled.button`
     `}
     ${(props) => {
     if (props.disabled) {
+      if (props.hideAll) {
+        return `
+        background-color: ${Colours.TRANSPARENT};
+        color: ${Colours.BLACK_LIGHTEST_2};
+    `;
+      }
       return `
                     background-color: ${Colours.TRANSPARENT};
                     border: 1px solid ${Colours.GRAY_LIGHT};
