@@ -14,6 +14,7 @@ const PageLayout = ({ className, title, children }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  //Establishes sign-in status to determine visibility of sign-out button
   const isSignedIn = async () => {
     try {
       let response = await apiFetch("/user/session", {});
@@ -23,7 +24,6 @@ const PageLayout = ({ className, title, children }) => {
     }
   };
 
-  //Establishes sign-in status to determine visibility of sign-out button
   useEffect(() => {
     isSignedIn();
   }, [signInState]);
