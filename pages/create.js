@@ -46,7 +46,7 @@ const Create = () => {
   };
 
   return (
-    <PageLayout title="Create todo">
+    <PageLayout title="Create Todo">
       <Container>
         <div className="content">
           <h1>Create todo</h1>

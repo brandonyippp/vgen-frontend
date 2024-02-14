@@ -20,7 +20,7 @@ export const updateTodoError = ({ error = "" }) => ({
   error,
 });
 
-// TODO/ERROR
+// TODO/SUCCESS
 export const updateTodoSuccess = ({ success = "" }) => ({
   type: "TODO/SUCCESS",
   success,

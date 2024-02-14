@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { clearSignIn } from "../actions/signIn";
+import { clearSignIn, clearSignInAlerts } from "../actions/signIn";
+import { clearTodoAlerts } from "../actions/todo";
 import apiFetch from "../functions/apiFetch";
 import { Colours } from "../definitions";
 import { useRouter } from "next/router";
@@ -36,6 +37,11 @@ const PageLayout = ({ className, title, children }) => {
 
     if (response.status === 200) {
       dispatch(clearSignIn());
+      dispatch(clearSignInAlerts());
+
+      //TODO: Determine whether to clear todo confirmation on page change or only on sign-out
+      // Might be nice to still see confirmation if you go from /create -> / -> /create
+      dispatch(clearTodoAlerts());
       setSignedIn(false);
       router.push("/signin");
     }
