@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Colours, Typography } from "../definitions";
 import Button from "../components/Button";
 import PageLayout from "../components/PageLayout";
+import withAuth from "../utils/WithAuth";
 
 const Index = () => {
   return (
@@ -35,7 +36,7 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withAuth(Index);
 
 const Container = styled.div`
   width: 100%;

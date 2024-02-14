@@ -1,3 +1,10 @@
+/**
+ * 1. Updated redirect to /signin if sign-up successful
+ * 2. Stored username & password as local state instead of global
+ *    -POST request made accordingly if valid inputs given for username/password/confirmedPassword
+ * 3. Surrounding try-catch for async/await call & response.status check
+ */
+
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
@@ -21,6 +28,9 @@ import PageLayout from "../components/PageLayout";
 import Alert from "../components/Alert";
 
 const SignUp = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmedPassword, setConfirmedPassword] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
   const signUpState = useSelector((state) => state.signUp);
   const dispatch = useDispatch();
@@ -28,37 +38,45 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!signUpState.body.username) {
+    if (!username) {
       dispatch(updateSignUpError({ error: "You must choose a username" }));
-    } else if (signUpState.body.password.length < 6) {
+    } else if (password.length < 6) {
       dispatch(
         updateSignUpError({
           error: "Your password must be at least 6 characters long",
         })
       );
-    } else if (signUpState.body.confirmPassword !== signUpState.body.password) {
+    } else if (confirmedPassword !== password) {
       dispatch(updateSignUpError({ error: "The passwords must match!" }));
     } else {
+      //store credentials in global state on successful sign-up
+      // dispatch(updateSignUpUsername({ username }));
+      // dispatch(updateSignUpPassword({ password }));
+
       setIsSigningUp(true);
       dispatch(clearSignUpAlerts());
-      let response = await apiFetch("/user", {
-        body: {
-          ...signUpState.body,
-        },
-        method: "POST",
-        includeCredentials: false,
-      });
+      try {
+        let response = await apiFetch("/user", {
+          body: {
+            username,
+            password,
+            confirmedPassword,
+          },
+          method: "POST",
+          includeCredentials: false,
+        });
 
-      if (response.status === 201) {
-        dispatch(clearSignUp());
-        dispatch(
-          updateSignUpSuccess({
-            success: "Account creation successful, redirecting...",
-          })
-        );
+        if (response.status === 201) {
+          dispatch(clearSignUp());
+          dispatch(
+            updateSignUpSuccess({
+              success: "Account creation successful, redirecting...",
+            })
+          );
 
-        router.replace("/");
-      } else {
+          router.replace("/signin");
+        }
+      } catch (error) {
         setIsSigningUp(false);
         dispatch(updateSignUpError({ error: response.body.error }));
       }
@@ -85,34 +103,40 @@ const SignUp = () => {
               type="text"
               placeholder="Username"
               required
-              value={signUpState.body.username}
-              onChange={(e) =>
-                dispatch(updateSignUpUsername({ username: e.target.value }))
-              }
+              // value={signUpState.body.username}
+              // onChange={(e) =>
+              //   dispatch(updateSignUpUsername({ username: e.target.value }))
+              // }
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <InputField
               className="input"
               type="password"
               placeholder="Password"
               required
-              value={signUpState.body.password}
-              onChange={(e) =>
-                dispatch(updateSignUpPassword({ password: e.target.value }))
-              }
+              // value={signUpState.body.password}
+              // onChange={(e) =>
+              //   dispatch(updateSignUpPassword({ password: e.target.value }))
+              // }
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <InputField
               className="input"
               type="password"
               placeholder="Confirm password"
               required
-              value={signUpState.body.confirmPassword}
-              onChange={(e) =>
-                dispatch(
-                  updateSignUpConfirmPassword({
-                    confirmPassword: e.target.value,
-                  })
-                )
-              }
+              // value={signUpState.body.confirmPassword}
+              // onChange={(e) =>
+              //   dispatch(
+              //     updateSignUpConfirmPassword({
+              //       confirmPassword: e.target.value,
+              //     })
+              //   )
+              // }
+              value={confirmedPassword}
+              onChange={(e) => setConfirmedPassword(e.target.value)}
             />
             <Button
               className="loginButton"

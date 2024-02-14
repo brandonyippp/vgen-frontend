@@ -1,3 +1,9 @@
+/**
+ * 1. Stored username & password as local state instead of global
+ *    -Will be pushed to global state on actual sign-in success, rather than onChange to fields respectively
+ * 2. Surrounding try-catch for async/await call & response.status check
+ */
+
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
@@ -21,6 +27,8 @@ import Alert from "../components/Alert";
 
 const SignIn = () => {
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const signInState = useSelector((state) => state.signIn);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -28,20 +36,35 @@ const SignIn = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (signInState.body.username && signInState.body.password) {
+    if (username && password) {
+      //push local state to global on sign-in success
+      dispatch(updateSignInUsername({ username: e.target.value }));
+      dispatch(updateSignInPassword({ password: e.target.value }));
+
       setIsSigningIn(true);
       dispatch(clearSignInAlerts());
-      let response = await apiFetch("/user/session", {
-        body: signInState.body,
-        method: "POST",
-      });
-      if (response.status === 200) {
-        dispatch(clearSignIn());
-        dispatch(
-          updateSignInSuccess({ success: "Sign in successful, redirecting..." })
-        );
-        router.push("/");
-      } else {
+
+      try {
+        let response = await apiFetch("/user/session", {
+          body: {
+            username,
+            password,
+          },
+          method: "POST",
+        });
+
+        if (response.status === 200) {
+          dispatch(clearSignIn());
+          dispatch(
+            updateSignInSuccess({
+              success: "Sign in successful, redirecting...",
+            })
+          );
+          router.push("/");
+        }
+      } catch (error) {
+        console.log(`Failed to sign-in: ${error}`);
+
         dispatch(updateSignInError({ error: response.body.error }));
         setIsSigningIn(false);
       }
@@ -68,20 +91,24 @@ const SignIn = () => {
               type="text"
               placeholder="Username"
               required
-              value={signInState.body.username}
-              onChange={(e) =>
-                dispatch(updateSignInUsername({ username: e.target.value }))
-              }
+              // value={signInState.body.username}
+              // onChange={(e) =>
+              //   dispatch(updateSignInUsername({ username: e.target.value }))
+              // }
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <InputField
               className="input"
               type="password"
               placeholder="Password"
               required
-              value={signInState.body.password}
-              onChange={(e) =>
-                dispatch(updateSignInPassword({ password: e.target.value }))
-              }
+              // value={signInState.body.password}
+              // onChange={(e) =>
+              //   dispatch(updateSignInPassword({ password: e.target.value }))
+              // }
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               className="loginButton"

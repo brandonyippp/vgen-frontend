@@ -1,3 +1,8 @@
+/**
+ * 1. Added HOC to verify sign-in status prior to showing /create
+ * 2. Surrounding try-catch for async/await call & response.status check
+ */
+
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Colours, Typography } from "../definitions";
@@ -15,6 +20,7 @@ import InputField from "../components/InputField";
 import apiFetch from "../functions/apiFetch";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "../components/Alert";
+import withAuth from "../utils/WithAuth";
 
 const Create = () => {
   const [isSaving, setIsSaving] = useState(false);
@@ -27,21 +33,26 @@ const Create = () => {
     if (todoState.body.name) {
       setIsSaving(true);
       dispatch(clearTodoAlerts());
-      let response = await apiFetch("/todo", {
-        body: todoState.body,
-        method: "POST",
-      });
-      setIsSaving(false);
-      if (response.status === 201) {
-        dispatch(
-          updateTodoSuccess({
-            success: `Todo "${todoState.body.name}" saved successfully`,
-          })
-        );
-        dispatch(clearTodoBody());
-      } else {
+
+      try {
+        let response = await apiFetch("/todo", {
+          body: todoState.body,
+          method: "POST",
+        });
+
+        if (response.status === 201) {
+          dispatch(
+            updateTodoSuccess({
+              success: `Todo "${todoState.body.name}" saved successfully`,
+            })
+          );
+          dispatch(clearTodoBody());
+        }
+      } catch (error) {
+        console.log(`Failed to create todo: ${error}`);
         dispatch(updateTodoError({ error: response.body.error }));
       }
+      setIsSaving(false);
     }
   };
 
@@ -86,7 +97,7 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default withAuth(Create);
 
 const Container = styled.div`
   width: 100%;
