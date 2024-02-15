@@ -19,7 +19,7 @@ const PageLayout = ({ className, title, children }) => {
   const isSignedIn = async () => {
     try {
       let response = await apiFetch("/user/session", {});
-      return response.status === 200 ? setSignedIn(true) : setSignedIn(false);
+      response.status === 200 ? setSignedIn(true) : setSignedIn(false);
     } catch (error) {
       console.log(error);
     }
