@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
 import { Colours, Typography } from "../definitions";
+import * as Constants from "../constants.js";
 import apiFetch from "../functions/apiFetch";
 import InputField from "../components/InputField";
 import PageLayout from "../components/PageLayout";
@@ -28,14 +29,13 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const minPasswordLength = 6;
 
     if (!signUpState.body.username) {
       dispatch(updateSignUpError({ error: "You must choose a username" }));
-    } else if (signUpState.body.password.length < minPasswordLength) {
+    } else if (signUpState.body.password.length < Constants.minPasswordLength) {
       dispatch(
         updateSignUpError({
-          error: `Your password must be at least ${minPasswordLength} characters long`,
+          error: `Your password must be at least ${Constants.minPasswordLength} characters long`,
         })
       );
     } else if (signUpState.body.confirmPassword !== signUpState.body.password) {
