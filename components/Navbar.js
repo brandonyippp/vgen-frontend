@@ -8,7 +8,7 @@ const Navbar = ({ ...props }) => {
   return (
     <Header className={props.className}>
       <HeaderContents>
-        <Link href="/">
+        <Link href="/" onClick={props.handleRedirect}>
           <img className="headerLogo" src="/img/todox-logo-white.svg" />
         </Link>
         <Button

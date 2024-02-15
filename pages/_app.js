@@ -1,7 +1,7 @@
 import React from "react";
+import configureStore from "../store/configureStore";
 import { Provider } from "react-redux";
 import Head from "next/head";
-import configureStore from "../store/configureStore";
 
 // This default export is required in a new `pages/_app.js` file.
 export default function App({ Component, pageProps }) {

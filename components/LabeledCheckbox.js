@@ -21,7 +21,6 @@ const CheckboxContainer = styled.div``;
 
 const CheckboxLabel = styled.p`
   ${(props) => {
-    console.log(props);
     if (props.disabled) {
       return `
         opacity: 0.5;

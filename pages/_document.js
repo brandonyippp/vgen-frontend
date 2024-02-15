@@ -1,8 +1,8 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import Script from "next/script";
 import { ServerStyleSheet } from "styled-components";
-import config from "../config";
+// import Script from "next/script";
+// import config from "../config";
 
 class MyDocument extends Document {
   render() {
