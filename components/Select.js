@@ -4,6 +4,7 @@ import styled from "styled-components";
 const Select = (props) => {
   return (
     <SelectionContainer>
+      <span>{props.text}</span>
       <select
         value={props.active}
         onChange={(e) => props.onChange(e.target.value)}
@@ -21,4 +22,6 @@ const Select = (props) => {
 
 export default Select;
 
-const SelectionContainer = styled.div``;
+const SelectionContainer = styled.div`
+  display: flex;
+`;

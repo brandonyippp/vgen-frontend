@@ -13,13 +13,17 @@ import {
   compareArrays,
   applySortingField,
   sortByCreationDate,
+  sortByAlphabetical,
   configureAllTab,
   configureIncompleteTab,
   configureCompleteTab,
 } from "../functions/helpers.js";
 
 const Todos = () => {
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState(Constants.todoTabLiterals.all);
+  const [sortOption, setSortOption] = useState(
+    Constants.sortOptionLiterals.creationDateDescending
+  );
   const [activeList, setActiveList] = useState([]);
   const [todos, setTodos] = useState([]);
   const [originalTodos, setOriginalTodos] = useState([]);
@@ -74,6 +78,45 @@ const Todos = () => {
     setIsUnaltered(compareArrays(todos, originalTodos, [`status`]));
   }, [activeList, todos]);
 
+  useEffect(() => {
+    const deepCopy = activeList.map((todo) => ({ ...todo }));
+
+    if (sortOption === Constants.sortOptionLiterals.creationDateAscending) {
+      // setActiveList((prev) => sortByCreationDate(prev, false));
+      sortByCreationDate(deepCopy, false);
+      setActiveList(deepCopy);
+    } else if (
+      sortOption === Constants.sortOptionLiterals.creationDateDescending
+    ) {
+      // setActiveList((prev) => sortByCreationDate(prev));
+      sortByCreationDate(deepCopy);
+      setActiveList(deepCopy);
+    } else if (
+      sortOption === Constants.sortOptionLiterals.alphabeticalAscending
+    ) {
+      // setActiveList((prev) => sortByAlphabetical(prev, false));
+      sortByAlphabetical(deepCopy, false);
+      setActiveList(deepCopy);
+    } else if (
+      sortOption === Constants.sortOptionLiterals.alphabeticalDescending
+    ) {
+      // setActiveList((prev) => sortByAlphabetical(prev));
+      sortByAlphabetical(deepCopy);
+      setActiveList(deepCopy);
+    }
+  }, [sortOption]);
+
+  // Updates all checkmarks for listed todos to <checked>
+  const configureTabCheckboxes = (checked) => {
+    if (activeTab === Constants.todoTabLiterals.all) {
+      configureAllTab(setTodos, checked);
+    } else if (activeTab === Constants.todoTabLiterals.incomplete) {
+      configureIncompleteTab(setTodos, checked);
+    } else if (activeTab === Constants.todoTabLiterals.complete) {
+      configureCompleteTab(setTodos, checked);
+    }
+  };
+
   // Update a single checkbox for a given todo
   const updateCheck = (todoID) => {
     setTodos((prev) =>
@@ -85,17 +128,6 @@ const Todos = () => {
         return todo;
       })
     );
-  };
-
-  // Updates all checkmarks for listed todos to <checked>
-  const configureTabCheckboxes = (checked) => {
-    if (activeTab === Constants.todoTabLiterals.all) {
-      configureAllTab(setTodos, checked);
-    } else if (activeTab === Constants.todoTabLiterals.incomplete) {
-      configureIncompleteTab(setTodos, checked);
-    } else if (activeTab === Constants.todoTabLiterals.complete) {
-      configureCompleteTab(setTodos, checked);
-    }
   };
 
   const applyChanges = async () => {
@@ -129,10 +161,13 @@ const Todos = () => {
   const renderTodo = (item) => (
     <ListItem key={item.todoID}>
       <ListContent>{item.name}</ListContent>
-      <ListContent>{item.completed ? "completed" : "incompleted"}</ListContent>
+      <ListContent>
+        {item.completed ? "completed\n" : "incompleted\n"}
+      </ListContent>
+      <ListContent>{new Date(item.created).toLocaleDateString()}</ListContent>
       <ListContent>
         <LabeledCheckbox
-          text={`Marked as ${item.status ? "complete" : "incomplete"}`}
+          text={`Click to mark as ${item.status ? "incomplete" : "complete"}`}
           checked={item.status}
           onChange={() => updateCheck(item.todoID)}
         />
@@ -144,11 +179,20 @@ const Todos = () => {
     <PageLayout title="Todos">
       <Container>
         <OptionsContainer>
-          <Select
-            active={activeTab}
-            onChange={setActiveTab}
-            options={Constants.todoTabs}
-          />
+          <SelectContainer>
+            <Select
+              active={activeTab}
+              onChange={setActiveTab}
+              options={Constants.todoTabs}
+              text={"Filter:"}
+            />
+            <Select
+              active={sortOption}
+              onChange={setSortOption}
+              options={Constants.sortOptions}
+              text={"Sort:"}
+            />
+          </SelectContainer>
           <Button
             text="Apply Changes"
             onClick={applyChanges}
@@ -158,14 +202,18 @@ const Todos = () => {
             <LabeledCheckbox
               text={"Uncheck All"}
               checked={allChecked}
-              disabled={allChecked === null ? true : false}
+              disabled={
+                !activeList.length || allChecked === null ? true : false
+              }
               onChange={() => configureTabCheckboxes(!allChecked)}
             />
           ) : (
             <LabeledCheckbox
               text={"Check All"}
               checked={false}
-              disabled={allChecked === null ? true : false}
+              disabled={
+                !activeList.length || allChecked === null ? true : false
+              }
               onChange={() => configureTabCheckboxes(!allChecked)}
             />
           )}
@@ -173,6 +221,7 @@ const Todos = () => {
         <HeadingContainer>
           <Header>Todo Name</Header>
           <Header>Status</Header>
+          <Header>Created (mm/dd/yy)</Header>
           <Header>Action</Header>
         </HeadingContainer>
         <List items={activeList} renderItem={renderTodo} type={"todo"} />
@@ -192,9 +241,13 @@ const Container = styled.div`
 const OptionsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   padding: 1rem;
+`;
+
+const SelectContainer = styled.div`
+  flex: 1 1 auto;
 `;
 
 const HeadingContainer = styled.div`
@@ -228,6 +281,6 @@ const ListItem = styled.div`
 
 const ListContent = styled.div`
   overflow-wrap: break-word;
-  max-width: 50%;
+  width: 20%;
   height: 100%;
 `;

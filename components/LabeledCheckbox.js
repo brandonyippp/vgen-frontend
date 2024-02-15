@@ -5,7 +5,7 @@ import styled from "styled-components";
 const LabeledCheckbox = (props) => {
   return (
     <CheckboxContainer>
-      <p>{props.text}</p>
+      <CheckboxLabel disabled={props.disabled}>{props.text}</CheckboxLabel>
       <Checkbox
         checked={props.checked}
         onChange={props.onChange}
@@ -18,3 +18,14 @@ const LabeledCheckbox = (props) => {
 export default LabeledCheckbox;
 
 const CheckboxContainer = styled.div``;
+
+const CheckboxLabel = styled.p`
+  ${(props) => {
+    console.log(props);
+    if (props.disabled) {
+      return `
+        opacity: 0.5;
+      `;
+    }
+  }}
+`;

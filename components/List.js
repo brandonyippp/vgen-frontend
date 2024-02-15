@@ -5,11 +5,9 @@ const List = (props) => {
   return (
     <UnorderedList>
       {props.items && props.items.length ? (
-        props.items.map(
-          (item) => props.type === "todo" && props.renderItem(item)
-        )
+        props.items.map((item) => props.renderItem(item))
       ) : (
-        <p>Nothing to display.</p>
+        <Placeholder>Nothing to display.</Placeholder>
       )}
     </UnorderedList>
   );
@@ -19,4 +17,12 @@ export default List;
 
 const UnorderedList = styled.ul`
   flex: 1 1 auto;
+`;
+
+const Placeholder = styled.p`
+  font-weight: 400;
+  font-style: italic;
+  text-decoration: underline;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 `;

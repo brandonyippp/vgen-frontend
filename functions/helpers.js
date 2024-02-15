@@ -94,8 +94,20 @@ export const applySortingField = (todos) => {
 };
 
 // Sort todo's by their creation date
-export const sortByCreationDate = (todos) => {
-  return todos.sort((a, b) => new Date(b.created) - new Date(a.created));
+export const sortByCreationDate = (todos, descending = true) => {
+  return todos.sort((a, b) =>
+    descending
+      ? new Date(b.created) - new Date(a.created)
+      : new Date(a.created) - new Date(b.created)
+  );
+};
+
+export const sortByAlphabetical = (todos, descending = true) => {
+  return todos.sort((a, b) =>
+    descending
+      ? a.name[0].localeCompare(b.name[0])
+      : b.name[0].localeCompare(a.name[0])
+  );
 };
 
 // Set all todo's in the all tab to the desired result
