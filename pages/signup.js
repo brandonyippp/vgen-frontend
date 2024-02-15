@@ -4,6 +4,13 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
 import { Colours, Typography } from "../definitions";
+import * as Constants from "../constants.js";
+import apiFetch from "../functions/apiFetch";
+import InputField from "../components/InputField";
+import PageLayout from "../components/PageLayout";
+import Button from "../components/Button";
+import Alert from "../components/Alert";
+import Form from "../components/Form";
 import {
   clearSignUp,
   clearSignUpAlerts,
@@ -13,12 +20,6 @@ import {
   updateSignUpSuccess,
   updateSignUpUsername,
 } from "../actions/signUp";
-import apiFetch from "../functions/apiFetch";
-import Form from "../components/Form";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
-import PageLayout from "../components/PageLayout";
-import Alert from "../components/Alert";
 
 const SignUp = () => {
   const [isSigningUp, setIsSigningUp] = useState(false);
@@ -28,12 +29,13 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     if (!signUpState.body.username) {
       dispatch(updateSignUpError({ error: "You must choose a username" }));
-    } else if (signUpState.body.password.length < 6) {
+    } else if (signUpState.body.password.length < Constants.minPasswordLength) {
       dispatch(
         updateSignUpError({
-          error: "Your password must be at least 6 characters long",
+          error: `Your password must be at least ${Constants.minPasswordLength} characters long`,
         })
       );
     } else if (signUpState.body.confirmPassword !== signUpState.body.password) {
@@ -41,6 +43,7 @@ const SignUp = () => {
     } else {
       setIsSigningUp(true);
       dispatch(clearSignUpAlerts());
+
       let response = await apiFetch("/user", {
         body: {
           ...signUpState.body,

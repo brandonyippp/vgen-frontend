@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Colours, Typography } from "../definitions";
 
 const List = (props) => {
   return (
@@ -16,13 +17,20 @@ const List = (props) => {
 export default List;
 
 const UnorderedList = styled.ul`
-  flex: 1 1 auto;
+  max-height: 75vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  /* Hide scrollbar for webkit-based browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Placeholder = styled.p`
   font-weight: 400;
   font-style: italic;
   text-decoration: underline;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: ${Typography.BODY_SIZES.L};
+  margin-bottom: ${Typography.BODY_SIZES.L};
 `;

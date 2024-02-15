@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 import { Colours, Typography } from "../definitions";
-import Button from "../components/Button";
+import styled from "styled-components";
+import apiFetch from "../functions/apiFetch";
+import InputField from "../components/InputField";
 import PageLayout from "../components/PageLayout";
+import Button from "../components/Button";
+import Alert from "../components/Alert";
+import Form from "../components/Form";
 import {
   clearTodoAlerts,
   clearTodoBody,
@@ -10,11 +15,6 @@ import {
   updateTodoName,
   updateTodoSuccess,
 } from "../actions/todo";
-import Form from "../components/Form";
-import InputField from "../components/InputField";
-import apiFetch from "../functions/apiFetch";
-import { useDispatch, useSelector } from "react-redux";
-import Alert from "../components/Alert";
 
 const Create = () => {
   const [isSaving, setIsSaving] = useState(false);

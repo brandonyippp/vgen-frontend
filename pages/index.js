@@ -1,9 +1,9 @@
 import React from "react";
-import Link from "next/link";
 import styled from "styled-components";
-import { Colours, Typography } from "../definitions";
-import Button from "../components/Button";
+import Link from "next/link";
 import PageLayout from "../components/PageLayout";
+import Button from "../components/Button";
+// import { Colours, Typography } from "../definitions";
 
 const Index = () => {
   return (

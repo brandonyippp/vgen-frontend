@@ -1,10 +1,9 @@
+import getAuthHeaders from "./functions/getAuthHeaders";
+import apiFetch from "./functions/apiFetch";
 import { NextResponse } from "next/server";
 import config from "./config";
-import apiFetch from "./functions/apiFetch";
-import getAuthHeaders from "./functions/getAuthHeaders";
 
-const authenticatedPaths = ["/", "/create", "/todos"];
-const unauthenticatedPaths = ["/signup", "/signin"];
+import { authenticatedPaths, unauthenticatedPaths } from "./constants.js";
 
 export async function middleware(req, event) {
   // Prevent users that aren't signed in from accessing certain protected pages

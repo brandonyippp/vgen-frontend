@@ -1,3 +1,5 @@
+import * as Constants from "../constants.js";
+
 /* HELPER FUNCTIONS */
 
 /* TEST/DEBUGGING FUNCTIONS */
@@ -88,7 +90,37 @@ export const compareArrays = (altered, original, properties = []) => {
 
 /* todo.js Helper Functions */
 
-// Apply field used to change completion status without immediately moving todo to respective tab <all, incomplete, complete>
+export const getFilteredActiveList = (list, activeTab) => {
+  if (activeTab === Constants.todoTabLiterals.all) {
+    return list;
+  } else if (activeTab === Constants.todoTabLiterals.incomplete) {
+    return list.filter((todo) => !todo.completed);
+  } else if (activeTab === Constants.todoTabLiterals.complete) {
+    return list.filter((todo) => todo.completed);
+  }
+};
+
+// Parent function for below-sort methods, used when sorting todo's on various tabs on given criterion
+export const sortByCriteria = (list, sortOption) => {
+  if (sortOption === Constants.sortOptionLiterals.creationDateAscending) {
+    sortByCreationDate(list, false);
+  } else if (
+    sortOption === Constants.sortOptionLiterals.creationDateDescending
+  ) {
+    sortByCreationDate(list);
+  } else if (
+    sortOption === Constants.sortOptionLiterals.alphabeticalAscending
+  ) {
+    sortByAlphabetical(list, false);
+  } else if (
+    sortOption === Constants.sortOptionLiterals.alphabeticalDescending
+  ) {
+    sortByAlphabetical(list);
+  }
+};
+
+// Apply field used to establish local changes to completion status of todo (todo.completed controls actual placement of todo in respective tab)
+// status can be thought of as a preliminary change to completion status before updating DB
 export const applySortingField = (todos) => {
   return todos.map((todo) => ({ ...todo, status: todo.completed }));
 };
@@ -104,9 +136,7 @@ export const sortByCreationDate = (todos, descending = true) => {
 
 export const sortByAlphabetical = (todos, descending = true) => {
   return todos.sort((a, b) =>
-    descending
-      ? a.name[0].localeCompare(b.name[0])
-      : b.name[0].localeCompare(a.name[0])
+    descending ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
   );
 };
 

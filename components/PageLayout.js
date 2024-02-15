@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { clearSignIn, clearSignInAlerts } from "../actions/signIn";
+import { useSelector, useDispatch } from "react-redux";
 import { clearTodoAlerts } from "../actions/todo";
 import apiFetch from "../functions/apiFetch";
 import { Colours } from "../definitions";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import Head from "next/head";
 import Navbar from "./Navbar";
+import Head from "next/head";
 
 const PageLayout = ({ className, title, children }) => {
   const signInState = useSelector((state) => state.signIn);
   const [signedIn, setSignedIn] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    isSignedIn();
+  }, [signInState]);
 
   //Establishes sign-in status to determine visibility of sign-out button
   const isSignedIn = async () => {
@@ -25,10 +29,7 @@ const PageLayout = ({ className, title, children }) => {
     }
   };
 
-  useEffect(() => {
-    isSignedIn();
-  }, [signInState]);
-
+  // Sign user out on sign-out button press
   const handleSignout = async () => {
     let response = await apiFetch("/user/session", {
       body: signInState.body,
@@ -36,15 +37,18 @@ const PageLayout = ({ className, title, children }) => {
     });
 
     if (response.status === 200) {
-      dispatch(clearSignIn());
-      dispatch(clearSignInAlerts());
+      clearAlerts();
 
-      //TODO: Determine whether to clear todo confirmation on page change or only on sign-out
-      // Might be nice to still see confirmation if you go from /create -> / -> /create
-      dispatch(clearTodoAlerts());
       setSignedIn(false);
       router.push("/signin");
     }
+  };
+
+  // Clear all relevant alerts
+  const clearAlerts = () => {
+    dispatch(clearSignIn());
+    dispatch(clearSignInAlerts());
+    dispatch(clearTodoAlerts());
   };
 
   return (
@@ -55,6 +59,7 @@ const PageLayout = ({ className, title, children }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Navbar
+        handleRedirect={clearAlerts}
         onClick={handleSignout}
         disabled={!signedIn}
         hideAll={!signedIn}

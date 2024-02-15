@@ -4,6 +4,12 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
 import { Colours, Typography } from "../definitions";
+import apiFetch from "../functions/apiFetch";
+import InputField from "../components/InputField";
+import PageLayout from "../components/PageLayout";
+import Button from "../components/Button";
+import Alert from "../components/Alert";
+import Form from "../components/Form";
 import {
   updateSignInUsername,
   updateSignInPassword,
@@ -12,12 +18,6 @@ import {
   clearSignInAlerts,
   clearSignIn,
 } from "../actions/signIn";
-import apiFetch from "../functions/apiFetch";
-import Form from "../components/Form";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
-import PageLayout from "../components/PageLayout";
-import Alert from "../components/Alert";
 
 const SignIn = () => {
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -25,6 +25,7 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  // Handle user sign-in
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -43,11 +44,6 @@ const SignIn = () => {
           })
         );
         router.push("/");
-
-        //TODO: Maybe something else
-        setTimeout(() => {
-          dispatch(clearSignInAlerts());
-        }, 1000);
       } else {
         dispatch(updateSignInError({ error: response.body.error }));
         setIsSigningIn(false);

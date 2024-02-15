@@ -19,3 +19,9 @@ export const sortOptionLiterals = {
   alphabeticalAscending: "Alphabetical ↑",
   alphabeticalDescending: "Alphabetical ↓",
 };
+
+export const minPasswordLength = 6;
+
+// Used by middleware
+export const authenticatedPaths = ["/", "/create", "/todos"];
+export const unauthenticatedPaths = ["/signup", "/signin"];
