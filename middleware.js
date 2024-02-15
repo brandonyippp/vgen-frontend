@@ -3,7 +3,6 @@ import config from "./config";
 import apiFetch from "./functions/apiFetch";
 import getAuthHeaders from "./functions/getAuthHeaders";
 
-//TODO: consider matcher
 const authenticatedPaths = ["/", "/create", "/todos"];
 const unauthenticatedPaths = ["/signup", "/signin"];
 

@@ -9,6 +9,7 @@ import * as Constants from "../constants.js";
 import Select from "../components/Select.js";
 import LabeledCheckbox from "../components/LabeledCheckbox.js";
 import {
+  returnArrayDifferences,
   compareArrays,
   applySortingField,
   sortByCreationDate,
@@ -66,7 +67,7 @@ const Todos = () => {
     if (!activeList.length) {
       setAllChecked(null);
     } else {
-      // Checkbox for select all on current tab should be checked if there aren't any boxes that are
+      // If there are no todo's on current tab that are marked as completed -> Display Check All, otherwise display Uncheck All
       setAllChecked(activeList.filter((todo) => !todo.status).length === 0);
     }
 
@@ -98,26 +99,46 @@ const Todos = () => {
   };
 
   const applyChanges = async () => {
-    setTodos((prev) =>
-      prev.map((todo) => ({ ...todo, completed: todo.status }))
-    );
+    const differences = returnArrayDifferences(todos, originalTodos, [
+      `status`,
+    ]);
 
-    let response = await apiFetch("/todo", {
-      body: todoState.body,
+    let response = await apiFetch("/todo/update", {
+      body: differences,
       method: "POST",
     });
-    setIsSaving(false);
-    if (response.status === 201) {
-      dispatch(
-        updateTodoSuccess({
-          success: `Todo "${todoState.body.name}" saved successfully`,
-        })
+    if (response.status === 200) {
+      setTodos((prev) =>
+        prev.map((todo) => ({
+          ...todo,
+          completed: todo.status,
+        }))
       );
-      dispatch(clearTodoBody());
+      setOriginalTodos(todos.map((todo) => ({ ...todo })));
+      // dispatch(
+      //   updateTodoSuccess({
+      //     success: `Todo "${todoState.body.name}" saved successfully`,
+      //   })
+      // );
+      // dispatch(clearTodoBody());
     } else {
-      dispatch(updateTodoError({ error: response.body.error }));
+      // dispatch(updateTodoError({ error: response.body.error }));
     }
   };
+
+  const renderTodo = (item) => (
+    <ListItem key={item.todoID}>
+      <ListContent>{item.name}</ListContent>
+      <ListContent>{item.completed ? "completed" : "incompleted"}</ListContent>
+      <ListContent>
+        <LabeledCheckbox
+          text={`Marked as ${item.status ? "complete" : "incomplete"}`}
+          checked={item.status}
+          onChange={() => updateCheck(item.todoID)}
+        />
+      </ListContent>
+    </ListItem>
+  );
 
   return (
     <PageLayout title="Todos">
@@ -133,14 +154,28 @@ const Todos = () => {
             onClick={applyChanges}
             disabled={isUnaltered}
           />
-          <LabeledCheckbox
-            text={allChecked ? "Uncheck All" : "Check All"}
-            checked={allChecked}
-            disabled={allChecked === null ? true : false}
-            onChange={() => configureTabCheckboxes(!allChecked)}
-          />
+          {allChecked ? (
+            <LabeledCheckbox
+              text={"Uncheck All"}
+              checked={allChecked}
+              disabled={allChecked === null ? true : false}
+              onChange={() => configureTabCheckboxes(!allChecked)}
+            />
+          ) : (
+            <LabeledCheckbox
+              text={"Check All"}
+              checked={false}
+              disabled={allChecked === null ? true : false}
+              onChange={() => configureTabCheckboxes(!allChecked)}
+            />
+          )}
         </OptionsContainer>
-        <List items={activeList} onChange={updateCheck} />
+        <HeadingContainer>
+          <Header>Todo Name</Header>
+          <Header>Status</Header>
+          <Header>Action</Header>
+        </HeadingContainer>
+        <List items={activeList} renderItem={renderTodo} type={"todo"} />
       </Container>
     </PageLayout>
   );
@@ -150,7 +185,8 @@ export default Todos;
 
 const Container = styled.div`
   flex: 1 1 auto;
-  border: 1px solid green;
+  border: 2px solid grey;
+  border-radius: 1rem;
 `;
 
 const OptionsContainer = styled.div`
@@ -159,5 +195,39 @@ const OptionsContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border: 1px solid blue;
+`;
+
+const HeadingContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 0.5rem;
+`;
+
+const Header = styled.div`
+  font-weight: bold;
+`;
+
+const ListItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid grey;
+  :first-child {
+    border-top: 1px solid grey;
+  }
+  :last-child {
+    border: none;
+  }
+`;
+
+const ListContent = styled.div`
+  overflow-wrap: break-word;
+  max-width: 50%;
+  height: 100%;
 `;
