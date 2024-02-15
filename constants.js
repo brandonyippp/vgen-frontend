@@ -12,6 +12,7 @@ export const sortOptions = [
   "Alphabetical ↑",
   "Alphabetical ↓",
 ];
+
 export const sortOptionLiterals = {
   creationDateAscending: "Creation Date ↑",
   creationDateDescending: "Creation Date ↓",
