@@ -97,10 +97,26 @@ const Todos = () => {
     }
   };
 
-  const applyChanges = () => {
+  const applyChanges = async () => {
     setTodos((prev) =>
       prev.map((todo) => ({ ...todo, completed: todo.status }))
     );
+
+    let response = await apiFetch("/todo", {
+      body: todoState.body,
+      method: "POST",
+    });
+    setIsSaving(false);
+    if (response.status === 201) {
+      dispatch(
+        updateTodoSuccess({
+          success: `Todo "${todoState.body.name}" saved successfully`,
+        })
+      );
+      dispatch(clearTodoBody());
+    } else {
+      dispatch(updateTodoError({ error: response.body.error }));
+    }
   };
 
   return (
