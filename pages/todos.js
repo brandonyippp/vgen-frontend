@@ -57,7 +57,7 @@ const Todos = () => {
     fetchTodos();
   }, []);
 
-  // Edit visibility of mass check/uncheck and "Apply Changes" button
+  // Edit visibility of mass check/uncheck and <Change Status | Delete Selected> buttons
   useEffect(() => {
     if (!activeList.length) {
       // Checkmark should be disabled if there's nothing in the list
