@@ -16,7 +16,7 @@ Welcome to the VGen Application (frontend portion)! This project allows users to
   - It should then be available at localhost:3000.
 
 3. Create an account at ```localhost:3000/signup```
-    - Follow the instructions <a href="https://github.com/brandonyippp/vgen-backend/tree/master">here</> for a more-detailed guide on how to set the backend client up to enable sign-up and sign-in functionalities.
+    - Follow the instructions <a href="https://github.com/brandonyippp/vgen-backend/tree/master">here<a/> for a more-detailed guide on how to set the backend client up to enable sign-up and sign-in functionalities.
 
 5. Sign-in at ```localhost:3000/signin```
 
