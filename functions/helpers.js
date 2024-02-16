@@ -90,6 +90,7 @@ export const compareArrays = (altered, original, properties = []) => {
 
 /* todo.js Helper Functions */
 
+// Returns a filtered shallow-copy list based on current activeTab for todos page
 export const getFilteredActiveList = (list, activeTab) => {
   if (activeTab === Constants.todoTabLiterals.all) {
     return list;
@@ -100,7 +101,7 @@ export const getFilteredActiveList = (list, activeTab) => {
   }
 };
 
-// Parent function for below-sort methods, used when sorting todo's on various tabs on given criterion
+// Parent function for below-sort methods, used when sorting todo's on various tabs on given criteria
 export const sortByCriteria = (list, sortOption) => {
   if (sortOption === Constants.sortOptionLiterals.creationDateAscending) {
     sortByCreationDate(list, false);
@@ -119,8 +120,7 @@ export const sortByCriteria = (list, sortOption) => {
   }
 };
 
-// Apply field used to establish local changes to completion checked of todo (todo.completed controls actual placement of todo in respective tab)
-// checked can be thought of as a preliminary change to completion checked before updating DB
+// Apply field used to enable local marking of todos for changing completion status or deletion
 export const applySortingField = (todos) => {
   return todos.map((todo) => ({ ...todo, checked: false }));
 };
@@ -134,19 +134,21 @@ export const sortByCreationDate = (todos, descending = true) => {
   );
 };
 
+// Sort todos by alphabetical
 export const sortByAlphabetical = (todos, descending = true) => {
   return todos.sort((a, b) =>
     descending ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
   );
 };
 
-// Set all todo's in the all tab to the desired result
+// Set all todo's in the All tab to passed in check value
 export const configureAllTab = (setStateFunction, checked) => {
   setStateFunction((prev) =>
     prev.map((item) => ({ ...item, checked: checked }))
   );
 };
 
+// Set all todo's in the Incomplete tab to passed in check value
 export const configureIncompleteTab = (setStateFunction, checked) => {
   setStateFunction((prev) =>
     prev.map((item) => ({
@@ -156,6 +158,7 @@ export const configureIncompleteTab = (setStateFunction, checked) => {
   );
 };
 
+// Set all todo's in the Complete tab to passed in check value
 export const configureCompleteTab = (setStateFunction, checked) => {
   setStateFunction((prev) =>
     prev.map((item) => ({
