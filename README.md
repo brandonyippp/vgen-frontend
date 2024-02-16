@@ -8,11 +8,11 @@ Welcome to the VGen Application (frontend portion)! This project allows users to
 
 1. Clone the repository to your local machine:
 
-  - ```git clone https://github.com/brandonyippp/vgen-frontend```
+    - ```git clone https://github.com/brandonyippp/vgen-frontend```
 
 2. Run the following commands:
-  - ```npm i```
-  - ```npm run dev```
+    - ```npm i```
+    - ```npm run dev```
   - It should then be available at localhost:3000.
 
 3. Create an account at ```localhost:3000/signup```
