@@ -212,18 +212,14 @@ const Todos = () => {
             <LabeledCheckbox
               text={"Uncheck All"}
               checked={allChecked}
-              disabled={
-                !activeList.length || allChecked === null ? true : false
-              }
+              disabled={!activeList.length || allChecked === null}
               onChange={() => adjustAllCheckboxes(!allChecked)}
             />
           ) : (
             <LabeledCheckbox
               text={"Check All"}
               checked={false}
-              disabled={
-                !activeList.length || allChecked === null ? true : false
-              }
+              disabled={!activeList.length || allChecked === null}
               onChange={() => adjustAllCheckboxes(!allChecked)}
             />
           )}
