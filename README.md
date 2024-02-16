@@ -1,6 +1,6 @@
 # Todo Web Application
 
-Welcome to the Todo Web Application! This project allows users to manage their tasks efficiently. The application consists of both a frontend and a backend, providing a seamless experience for users to sign up, sign in, create todos, mark them as complete or incomplete, and organize them based on alphabetical order and creation date. Additionally, users can filter their todos based on their completion status.
+Welcome to the VGen Application (frontend portion)! This project allows users to manage their tasks efficiently. The application consists of both a frontend and a backend, providing a seamless experience for users to sign up, sign in, create todos, mark them as complete or incomplete, and organize them based on alphabetical order and creation date. Additionally, users can filter their todos based on their completion status.
 
 ## Frontend
 
@@ -16,10 +16,11 @@ Welcome to the Todo Web Application! This project allows users to manage their t
   - It should then be available at localhost:3000.
 
 3. Create an account at ```localhost:3000/signup```
+    - Follow the instructions <a href="https://github.com/brandonyippp/vgen-backend/tree/master">here</> for a more-detailed guide on how to set the backend client up to enable sign-up and sign-in functionalities.
 
-4. Sign-in at ```localhost:3000/signin```
+5. Sign-in at ```localhost:3000/signin```
 
-5. Happy Todo-ing!
+6. Happy Todo-ing!
 
 ### Functionality
 
