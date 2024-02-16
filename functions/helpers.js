@@ -119,10 +119,10 @@ export const sortByCriteria = (list, sortOption) => {
   }
 };
 
-// Apply field used to establish local changes to completion status of todo (todo.completed controls actual placement of todo in respective tab)
-// status can be thought of as a preliminary change to completion status before updating DB
+// Apply field used to establish local changes to completion checked of todo (todo.completed controls actual placement of todo in respective tab)
+// checked can be thought of as a preliminary change to completion checked before updating DB
 export const applySortingField = (todos) => {
-  return todos.map((todo) => ({ ...todo, status: todo.completed }));
+  return todos.map((todo) => ({ ...todo, checked: false }));
 };
 
 // Sort todo's by their creation date
@@ -143,7 +143,7 @@ export const sortByAlphabetical = (todos, descending = true) => {
 // Set all todo's in the all tab to the desired result
 export const configureAllTab = (setStateFunction, checked) => {
   setStateFunction((prev) =>
-    prev.map((item) => ({ ...item, status: checked }))
+    prev.map((item) => ({ ...item, checked: checked }))
   );
 };
 
@@ -151,7 +151,7 @@ export const configureIncompleteTab = (setStateFunction, checked) => {
   setStateFunction((prev) =>
     prev.map((item) => ({
       ...item,
-      status: !item.completed ? checked : item.status,
+      checked: !item.completed ? checked : item.checked,
     }))
   );
 };
@@ -160,7 +160,7 @@ export const configureCompleteTab = (setStateFunction, checked) => {
   setStateFunction((prev) =>
     prev.map((item) => ({
       ...item,
-      status: item.completed ? checked : item.status,
+      checked: item.completed ? checked : item.checked,
     }))
   );
 };
