@@ -18,6 +18,7 @@
     "@babel/preset-react": "^7.17.12",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@material-ui/core": "^4.12.4",
     "@mui/material": "^5.15.10",
     "@react-hook/intersection-observer": "^3.1.1",
     "babel-plugin-styled-components": "^2.0.7",
